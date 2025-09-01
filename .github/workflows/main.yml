@@ -1,17 +1,20 @@
-name: PHP Composer
+name: PHP Composer Build and Release
 
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'composer.json'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'composer.json'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -35,8 +38,13 @@ jobs:
     - name: Build
       run: php awk-helper app:build awk-helper
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
+    - name: Create Release (only for main branch)
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        VERSION=$(php -r 'echo json_decode(file_get_contents("composer.json"))->version;')
+        gh release create "v$VERSION" \
+          --title "Release $VERSION" \
+          --notes "Автоматический релиз версии $VERSION" \
+          awk-helper
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

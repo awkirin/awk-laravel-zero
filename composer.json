@@ -2,6 +2,7 @@
     "name": "awkirin/awk-laravel-zero",
     "description": "Краткое описание вашего пакета",
     "license": "proprietary",
+    "version": "1.0.0",
     "require": {
         "php": "^8.2",
         "laravel-zero/framework": "^12.0"
