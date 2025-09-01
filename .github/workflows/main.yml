@@ -1,9 +1,9 @@
 name: PHP Composer Build and Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+#  push:
+#    tags:
+#      - 'v*'
   workflow_dispatch:
 
 
