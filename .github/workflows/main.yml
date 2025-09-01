@@ -3,10 +3,6 @@ name: PHP Composer Build Artifact
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'composer.json'
-      - 'app/**'
-      - 'config/**'
   pull_request:
     branches: [ "main" ]
 
