@@ -27,12 +27,12 @@ jobs:
 
 #    - name: Verify build
 #      run: |
-#        chmod +x build/awk-helper
-#        ./build/awk-helper --version
+#        chmod +x builds/awk-helper
+#        ./builds/awk-helper --version
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: awk-helper-binary
-        path: build/awk-helper
+        path: builds/awk-helper
         retention-days: 90
