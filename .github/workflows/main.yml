@@ -1,10 +1,11 @@
 name: PHP Composer Build and Release
 
 on:
+  workflow_dispatch:
 #  push:
 #    tags:
 #      - 'v*'
-  workflow_dispatch:
+
 
 
 permissions:
