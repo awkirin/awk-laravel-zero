@@ -1,13 +1,12 @@
-name: PHP Composer Build Artifact
+name: PHP Composer Build and Release
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build-and-upload:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,20 +18,17 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-#    - name: Run tests
-#      run: composer test
-
     - name: Build application
       run: php awk-helper app:build awk-helper
 
-#    - name: Verify build
-#      run: |
-#        chmod +x builds/awk-helper
-#        ./builds/awk-helper --version
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: awk-helper-binary
-        path: builds/awk-helper
-        retention-days: 90
+    - name: Create Latest Release
+      if: github.ref == 'refs/heads/main'
+      run: |
+        # Создаем или обновляем релиз "latest" напрямую из собранного файла
+        gh release create latest \
+          --title "Latest Build" \
+          --notes "Автоматическая сборка от $(date +"%Y-%m-%d %H:%M")" \
+          --latest \
+          builds/awk-helper
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
