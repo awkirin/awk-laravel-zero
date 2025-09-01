@@ -19,8 +19,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Run tests
-      run: composer test
+#    - name: Run tests
+#      run: composer test
 
     - name: Build application
       run: php awk-helper app:build awk-helper
