@@ -2,24 +2,21 @@ name: PHP Composer Build and Release
 
 on:
   push:
-    branches: [ "main" ]
-    paths:
-      - 'composer.json'
-  pull_request:
-    branches: [ "main" ]
-    paths:
-      - 'composer.json'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  build:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -39,13 +36,13 @@ jobs:
     - name: Build
       run: php awk-helper app:build awk-helper
 
-    - name: Create Release (only for main branch)
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    - name: Create Release from Tag
       run: |
-        VERSION=$(php -r 'echo json_decode(file_get_contents("composer.json"))->version;')
-        gh release create "v$VERSION" \
-          --title "Release $VERSION" \
-          --notes "Автоматический релиз версии $VERSION" \
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+
+        gh release create "$TAG_NAME" \
+          --title "Release $TAG_NAME" \
+          --notes-file <(git tag -l --format='%(contents)' "$TAG_NAME" 2>/dev/null || echo "Релиз версии $TAG_NAME") \
           awk-helper
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
