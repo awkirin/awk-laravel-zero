@@ -1,56 +1,42 @@
-name: PHP Composer Build and Release
+name: PHP Composer Build Artifact
 
 on:
   push:
-    tags:
-      - 'v*' # Запуск при пуше тегов, начинающихся с 'v'
-  workflow_dispatch:
-
-permissions:
-  contents: write
+    branches: [ "main" ]
+    paths:
+      - 'composer.json'
+      - 'app/**'
+      - 'config/**'
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build-and-release:
+  build-and-upload:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # Полная история для получения тегов
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
+    - name: Run tests
+      run: composer test
 
     - name: Build application
       run: php awk-helper app:build awk-helper
 
-    - name: List built files (for debugging)
-      run: ls -la build/
-
-    - name: Create Release from Tag
+    - name: Verify build
       run: |
-        # Получаем имя тега из события
-        TAG_NAME=${GITHUB_REF#refs/tags/}
+        chmod +x build/awk-helper
+        ./build/awk-helper --version
 
-        # Переходим в директорию с собранным приложением
-        cd build
-
-        # Создаем релиз из существующего тега и загружаем собранный бинарник
-        gh release create "$TAG_NAME" \
-          --title "Release $TAG_NAME" \
-          --notes-file <(git tag -l --format='%(contents)' "$TAG_NAME" 2>/dev/null || echo "Релиз версии $TAG_NAME") \
-          awk-helper
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: awk-helper-binary
+        path: build/awk-helper
+        retention-days: 90
