@@ -5,6 +5,10 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+# Явно указываем permissions для записи релизов
+permissions:
+  contents: write
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
@@ -24,10 +28,13 @@ jobs:
     - name: Create Latest Release
       if: github.ref == 'refs/heads/main'
       run: |
-        # Создаем или обновляем релиз "latest" напрямую из собранного файла
+        # Сначала удаляем старый релиз latest, если он существует
+        gh release delete latest -y --cleanup-tag 2>/dev/null || true
+
+        # Создаем новый релиз latest
         gh release create latest \
-          --title "Latest Build" \
-          --notes "Автоматическая сборка от $(date +"%Y-%m-%d %H:%M")" \
+          --title "Latest Build ($(date +'%Y-%m-%d %H:%M'))" \
+          --notes "Автоматическая сборка из main branch" \
           --latest \
           builds/awk-helper
       env:
