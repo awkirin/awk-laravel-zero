@@ -1,5 +1,6 @@
 {
     "name": "awkirin/awk-laravel-zero",
+    "description": "Краткое описание вашего пакета",
     "require": {
         "php": "^8.2",
         "laravel-zero/framework": "^12.0"
