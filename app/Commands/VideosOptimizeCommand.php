@@ -6,10 +6,10 @@ use LaravelZero\Framework\Commands\Command;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 class VideosOptimizeCommand extends Command
 {
-
     protected string $statusFile = '';
     protected $signature = 'videos:optimize
         {--i|input=./ : Путь к входной директории с видео}
@@ -22,7 +22,7 @@ class VideosOptimizeCommand extends Command
     protected $description = 'Оптимизирует видео файлы с помощью FFmpeg';
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function handle(): void
     {
