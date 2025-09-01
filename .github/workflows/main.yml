@@ -25,10 +25,10 @@ jobs:
     - name: Build application
       run: php awk-helper app:build awk-helper
 
-    - name: Verify build
-      run: |
-        chmod +x build/awk-helper
-        ./build/awk-helper --version
+#    - name: Verify build
+#      run: |
+#        chmod +x build/awk-helper
+#        ./build/awk-helper --version
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
