@@ -209,7 +209,7 @@ class VideosOptimizeCommand extends Command
 
     protected function getVideoFiles(string $directory)
     {
-        $videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpg', 'mpeg', '3gp'];
+        $videoExtensions = [ 'mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm', 'm4v', 'mpg', 'mpeg', '3gp' ];
         $allExtensions = array_merge(
             $videoExtensions,
             array_map('strtoupper', $videoExtensions)
