@@ -13,6 +13,10 @@ class YoutubeVideoDownloadCommand extends Command
 
     public function handle(): int
     {
+        $this->info('Для работы прокси необходимо включить tor-browser');
+        $this->info('Для работы команды должен быть установлен yt-dlp');
+
+
         $url = $this->argument('url');
 
         $this->info("Скачивание видео: {$url}");
