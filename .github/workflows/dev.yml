@@ -2,7 +2,7 @@ name: PHP Composer Build and Release
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "dev" ]
   workflow_dispatch:
 
 permissions:
@@ -41,12 +41,12 @@ jobs:
       run: php awk-helper app:build awk-helper
 
     - name: Create Latest Release
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/dev'
       run: |
         gh release delete latest -y --cleanup-tag 2>/dev/null || true
         gh release create latest \
           --title "Latest Build ($(date +'%Y-%m-%d %H:%M'))" \
-          --notes "Автоматическая сборка из main branch" \
+          --notes "Автоматическая сборка из dev branch" \
           --latest \
           builds/awk-helper
       env:

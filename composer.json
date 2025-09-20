@@ -1,5 +1,6 @@
 {
-    "name": "awkirin/awk-laravel-zero",
+    "name": "awkirin/awkwrap",
+    "version": "1.0.0",
     "description": "Краткое описание вашего пакета",
     "license": "proprietary",
     "require": {
@@ -31,5 +32,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "bin": ["awk-helper"]
+    "bin": ["awkwrap"]
 }
